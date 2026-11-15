@@ -128,14 +128,31 @@ function speak(text){
  }
 }
 
-function openApp(name,url){
- if(url){
-  window.open(url,"_blank");
-  speak("Opening "+name);
- }else{
-  speak(name+" needs Android app integration.");
- }
+
+function openApp(name, url){
+  if(name === "YouTube"){
+    speak("Opening YouTube, Sir");
+    window.location.href = "vnd.youtube://";
+    setTimeout(() => {
+      window.location.href = "https://www.youtube.com";
+    }, 1200);
+    return;
+  }
+
+  if(name === "Chrome"){
+    speak("Opening Chrome, Sir");
+    window.location.href = "https://www.google.com";
+    return;
+  }
+
+  if(url){
+    window.location.href = url;
+    speak("Opening " + name);
+  } else {
+    speak(name + " needs Android integration.");
+  }
 }
+ 
 
 function runCommand(){
  const value=document.getElementById("command").value.trim().toLowerCase();
