@@ -155,13 +155,25 @@ function openApp(name, url){
  
 
 function runCommand(){
- const value=document.getElementById("command").value.trim().toLowerCase();
- if(!value)return;
- if(value.includes("youtube"))openApp("YouTube","https://www.youtube.com");
- else if(value.includes("chrome")||value.includes("google"))openApp("Chrome","https://www.google.com");
- else if(value.includes("whatsapp"))openApp("WhatsApp","https://wa.me/");
- else if(value.includes("phone"))openApp("Phone","tel:");
- else speak("Command received. "+value);
+  const value = document.getElementById("command").value.trim().toLowerCase();
+
+  if(!value) return;
+
+  if(value.includes("youtube") || value.includes("यूट्यूब")){
+    openApp("YouTube","https://www.youtube.com");
+
+  } else if(value.includes("chrome") || value.includes("google") || value.includes("क्रोम") || value.includes("गूगल")){
+    openApp("Chrome","https://www.google.com");
+
+  } else if(value.includes("whatsapp") || value.includes("व्हाट्सएप") || value.includes("व्हाट्सऐप")){
+    openApp("WhatsApp","https://wa.me/");
+
+  } else if(value.includes("phone") || value.includes("फोन") || value.includes("कॉल")){
+    openApp("Phone","tel:");
+
+  } else {
+    speak("Command received. " + value);
+  }
 }
 
 function listen(){
