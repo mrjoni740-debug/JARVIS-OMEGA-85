@@ -1,193 +1,260 @@
-
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS OMEGA 85</title>
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;background:radial-gradient(circle,#102c48,#020711 65%);
- color:#8eeeff;font-family:Arial,sans-serif;
- min-height:100vh;text-align:center;overflow-x:hidden;
-}
-header{padding:20px 10px 5px;letter-spacing:4px}
-h1{font-size:27px;text-shadow:0 0 18px #00cfff}
-.status{color:#36ffba;font-size:12px;letter-spacing:3px}
-.reactor{
- width:255px;height:255px;border-radius:50%;
- margin:35px auto 20px;position:relative;
- display:grid;place-items:center;
- background:repeating-radial-gradient(circle,transparent 0 48px,#00d9ff55 50px 52px,transparent 54px 68px);
- box-shadow:0 0 30px #00cfff, inset 0 0 25px #00bfff;
- animation:spin 16s linear infinite;
-}
-.reactor:before,.reactor:after{
- content:"";position:absolute;border:2px solid #00d9ff;
- border-radius:50%;inset:13px;
- border-top-color:transparent;border-bottom-color:transparent;
-}
-.reactor:after{inset:29px;transform:rotate(60deg)}
-.core{
- width:100px;height:100px;border-radius:50%;
- background:radial-gradient(circle,#fff,#00cfff 35%,#00658c 70%);
- box-shadow:0 0 35px #00eaff,0 0 75px #008cff;
- animation:pulse 2s infinite alternate;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{to{box-shadow:0 0 65px #00eaff,0 0 100px #008cff}}
-.panel{
- margin:18px 15px;padding:18px;
- border:1px solid #00bfff77;border-radius:18px;
- background:#071a2acc;box-shadow:0 0 18px #008cff33;
-}
-button{
- background:linear-gradient(135deg,#007ca8,#00334d);
- color:white;border:1px solid #00dfff;
- border-radius:30px;padding:13px 20px;
- margin:6px;font-size:14px;cursor:pointer;
- box-shadow:0 0 12px #00bfff55;
-}
-button:active{transform:scale(.95)}
-input{
- width:70%;padding:13px;border-radius:25px;
- border:1px solid #00cfff;background:#061322;color:white;
-}
-.apps{
- display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
-}
-.app{
- padding:12px 2px;border:1px solid #00bfff55;
- border-radius:14px;background:#09243b;
- cursor:pointer;font-size:12px;
-}
-.app span{display:block;font-size:27px;margin-bottom:7px}
-#output{min-height:25px;color:#7dffda}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS OMEGA-85</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0a192f 0%, #020c1b 100%);
+            color: #00f0ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 30px 20px;
+            overflow: hidden;
+        }
+
+        .header {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00f0ff;
+        }
+
+        /* 3D-Style Arc Reactor Component */
+        .arc-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .arc-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px dashed #00f0ff;
+            border-radius: 50%;
+            animation: spin 12s linear infinite;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+        }
+
+        .arc-inner {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border: 2px solid #00f0ff;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: spin-reverse 8s linear infinite;
+        }
+
+        .core {
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle, #ffffff 10%, #00f0ff 50%, #0a192f 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 40px #00f0ff, inset 0 0 20px #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #020c1b;
+            text-shadow: 0 0 5px #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .core.listening {
+            animation: pulse 1.5s infinite;
+            background: radial-gradient(circle, #ffffff 10%, #ff0055 60%, #0a192f 100%);
+            box-shadow: 0 0 40px #ff0055;
+        }
+
+        /* Controls & Console */
+        .panel {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(10, 25, 47, 0.7);
+            border: 1px solid #00f0ff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+            text-align: center;
+        }
+
+        .status-msg {
+            font-size: 16px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 1px;
+            width: 100%;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+
+        .btn:hover {
+            background: #00f0ff;
+            color: #020c1b;
+            box-shadow: 0 0 20px #00f0ff;
+        }
+
+        /* Animations */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
 </head>
 <body>
 
-<header>
-<h1>J.A.R.V.I.S</h1>
-<div class="status">OMEGA 85 • ONLINE</div>
-<div style="font-size:10px;margin-top:8px">NEXT GENERATION AI SYSTEM</div>
-</header>
+    <div class="header">JARVIS OMEGA-85</div>
 
-<div class="reactor"><div class="core"></div></div>
+    <!-- Arc Reactor System Touch Trigger -->
+    <div class="arc-container" onclick="triggerVoice()">
+        <div class="arc-outer"></div>
+        <div class="arc-inner"></div>
+        <div class="core" id="reactorCore">SYSTEM Ready</div>
+    </div>
 
-<div style="letter-spacing:3px">ARC REACTOR</div>
-<div class="status">SYSTEM READY</div>
+    <!-- Interface Controls -->
+    <div class="panel">
+        <div class="status-msg" id="statusOutput">JARVIS System Status: Online, Sir.</div>
+        <button class="btn" onclick="triggerVoice()">ACTIVATE VOICE</button>
+        <button class="btn" onclick="testVoiceOutput()">TEST VOICE SPEED</button>
+    </div>
 
-<div class="panel">
-<h3>VOICE COMMAND CENTER</h3>
-<div id="output">Welcome back, Sir.</div>
-<button onclick="listen()">🎙 ACTIVATE VOICE</button>
-<button onclick="speak('JARVIS system is ready, Sir')">🔊 TEST VOICE</button>
-</div>
+    <script>
+        const reactorCore = document.getElementById('reactorCore');
+        const statusOutput = document.getElementById('statusOutput');
 
-<div class="panel">
-<h3>SMART APP LAUNCHER</h3>
-<div class="apps" id="apps"></div>
-</div>
+        // REPLACEMENT NOTE: Put your generated Gemini API key in the placeholder below
+        const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
 
-<div class="panel">
-<h3>AI COMMAND TERMINAL</h3>
-<input id="command" placeholder="Type your command...">
-<button onclick="runCommand()">SEND</button>
-</div>
+        // 1. Force Browser Microphone Prompt on Launch
+        window.addEventListener('load', () => {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    statusOutput.innerText = "Microphone initialized successfully.";
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(err => {
+                    statusOutput.innerText = "Please enable Microphone permissions in system settings.";
+                });
+        });
 
-<script>
-const appList=[
- ["📞","Phone","tel:"],
- ["🌐","Chrome","https://www.google.com"],
- ["▶️","YouTube","https://www.youtube.com"],
- ["💬","WhatsApp","https://wa.me/"],
- ["📷","Camera",""],
- ["⚙️","Settings",""],
- ["📁","Files",""],
- ["🎵","Music",""]
-];
+        // 2. High Quality Speech Synthesis (TTS Engine)
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stops previous voice queues
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'hi-IN'; // Clear Indian Native Accent
+                utterance.pitch = 1.0;
+                utterance.rate = 1.0; 
+                window.speechSynthesis.speak(utterance);
+            } else {
+                statusOutput.innerText = "Speech Synthesis Engine Error.";
+            }
+        }
 
-const apps=document.getElementById("apps");
+        function testVoiceOutput() {
+            speak("System checking complete. J.A.R.V.I.S. online hai. Main aapki sahayata ke liye taiyar hoon.");
+        }
 
-appList.forEach(a=>{
- const el=document.createElement("div");
- el.className="app";
- el.innerHTML="<span>"+a[0]+"</span>"+a[1];
- el.onclick=()=>openApp(a[1],a[2]);
- apps.appendChild(el);
-});
+        // 3. Speech to Text & Gemini Pipeline
+        function triggerVoice() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                statusOutput.innerText = "Speech Recognition not supported on this platform.";
+                return;
+            }
 
-function speak(text){
- document.getElementById("output").textContent=text;
- if("speechSynthesis" in window){
-  const msg=new SpeechSynthesisUtterance(text);
-  msg.lang="hi-IN";
-  speechSynthesis.speak(msg);
- }
-}
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'hi-IN';
+            recognition.interimResults = false;
 
+            recognition.onstart = () => {
+                reactorCore.classList.add('listening');
+                reactorCore.innerText = "LISTENING...";
+                statusOutput.innerText = "Listening to your command...";
+            };
 
-function openApp(name, url){
-  if(name === "YouTube"){
-    speak("Opening YouTube, Sir");
-    window.location.href = "vnd.youtube://";
-    setTimeout(() => {
-      window.location.href = "https://www.youtube.com";
-    }, 1200);
-    return;
-  }
+            recognition.onerror = (e) => {
+                reactorCore.classList.remove('listening');
+                reactorCore.innerText = "SYSTEM Ready";
+                statusOutput.innerText = "Voice Recognition Error. Try again.";
+            };
 
-  if(name === "Chrome"){
-    speak("Opening Chrome, Sir");
-    window.location.href = "https://www.google.com";
-    return;
-  }
+            recognition.onresult = (event) => {
+                reactorCore.classList.remove('listening');
+                reactorCore.innerText = "PROCESSING";
+                const speechToText = event.results[0][0].transcript;
+                statusOutput.innerText = `You said: "${speechToText}"`;
+                
+                queryGeminiAI(speechToText);
+            };
 
-  if(url){
-    window.location.href = url;
-    speak("Opening " + name);
-  } else {
-    speak(name + " needs Android integration.");
-  }
-}
- 
+            recognition.start();
+        }
 
-function runCommand(){
-  const value = document.getElementById("command").value.trim().toLowerCase();
+        // 4. Secure Gemini REST Client API Core Integration
+        async function queryGeminiAI(promptText) {
+            if(GEMINI_API_KEY === "AQ.Ab8RN6Iz_cUAMYb-GDzTTbu3PnUeayCDo4GlOKV1wk2_iPoc9A" || !GEMINI_API_KEY) {
+                reactorCore.innerText = "SETUP REQ";
+                statusOutput.innerText = "Error: Please input a valid Gemini API Key inside index.html.";
+                speak("Sir, please code ke andar apni Gemini API key enter karein.");
+                return;
+            }
 
-  if(!value) return;
+            const endpoint = `https://googleapis.com{GEMINI_API_KEY}`;
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText + " (Respond politely as an AI assistant named JARVIS in clear short Hindi/Hinglish language)" }] }]
+                    })
+                });
 
-  if(value.includes("youtube") || value.includes("यूट्यूब")){
-    openApp("YouTube","https://www.youtube.com");
+                const data = await response.json();
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                
+                reactorCore.innerText = "SYSTEM Ready";
+                statusOutput.innerText = aiResponse;
+                speak(aiResponse);
 
-  } else if(value.includes("chrome") || value.includes("google") || value.includes("क्रोम") || value.includes("गूगल")){
-    openApp("Chrome","https://www.google.com");
-
-  } else if(value.includes("whatsapp") || value.includes("व्हाट्सएप") || value.includes("व्हाट्सऐप")){
-    openApp("WhatsApp","https://wa.me/");
-
-  } else if(value.includes("phone") || value.includes("फोन") || value.includes("कॉल")){
-    openApp("Phone","tel:");
-
-  } else {
-    speak("Command received. " + value);
-  }
-}
-
-function listen(){
- const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!Speech){speak("Voice recognition is not supported in this browser.");return;}
- const rec=new Speech();
- rec.lang="hi-IN";
- rec.onresult=e=>{
-  document.getElementById("command").value=e.results[0][0].transcript;
-  runCommand();
- };
- rec.onerror=()=>speak("Voice error. Please try again.");
- rec.start();
-}
-</script>
+            } catch (error) {
+                reactorCore.innerText = "ERROR";
+                statusOutput.innerText = "Failed to communicate with AI core engine.";
+                speak("AI Core system connection error.");
+            }
+        }
+    </script>
 </body>
 </html>
