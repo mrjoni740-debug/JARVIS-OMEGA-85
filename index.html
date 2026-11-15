@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS OMEGA 85</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:radial-gradient(circle,#102c48,#020711 65%);
+ color:#8eeeff;font-family:Arial,sans-serif;
+ min-height:100vh;text-align:center;overflow-x:hidden;
+}
+header{padding:20px 10px 5px;letter-spacing:4px}
+h1{font-size:27px;text-shadow:0 0 18px #00cfff}
+.status{color:#36ffba;font-size:12px;letter-spacing:3px}
+.reactor{
+ width:255px;height:255px;border-radius:50%;
+ margin:35px auto 20px;position:relative;
+ display:grid;place-items:center;
+ background:repeating-radial-gradient(circle,transparent 0 48px,#00d9ff55 50px 52px,transparent 54px 68px);
+ box-shadow:0 0 30px #00cfff, inset 0 0 25px #00bfff;
+ animation:spin 16s linear infinite;
+}
+.reactor:before,.reactor:after{
+ content:"";position:absolute;border:2px solid #00d9ff;
+ border-radius:50%;inset:13px;
+ border-top-color:transparent;border-bottom-color:transparent;
+}
+.reactor:after{inset:29px;transform:rotate(60deg)}
+.core{
+ width:100px;height:100px;border-radius:50%;
+ background:radial-gradient(circle,#fff,#00cfff 35%,#00658c 70%);
+ box-shadow:0 0 35px #00eaff,0 0 75px #008cff;
+ animation:pulse 2s infinite alternate;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{to{box-shadow:0 0 65px #00eaff,0 0 100px #008cff}}
+.panel{
+ margin:18px 15px;padding:18px;
+ border:1px solid #00bfff77;border-radius:18px;
+ background:#071a2acc;box-shadow:0 0 18px #008cff33;
+}
+button{
+ background:linear-gradient(135deg,#007ca8,#00334d);
+ color:white;border:1px solid #00dfff;
+ border-radius:30px;padding:13px 20px;
+ margin:6px;font-size:14px;cursor:pointer;
+ box-shadow:0 0 12px #00bfff55;
+}
+button:active{transform:scale(.95)}
+input{
+ width:70%;padding:13px;border-radius:25px;
+ border:1px solid #00cfff;background:#061322;color:white;
+}
+.apps{
+ display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+}
+.app{
+ padding:12px 2px;border:1px solid #00bfff55;
+ border-radius:14px;background:#09243b;
+ cursor:pointer;font-size:12px;
+}
+.app span{display:block;font-size:27px;margin-bottom:7px}
+#output{min-height:25px;color:#7dffda}
+</style>
+</head>
+<body>
+
+<header>
+<h1>J.A.R.V.I.S</h1>
+<div class="status">OMEGA 85 • ONLINE</div>
+<div style="font-size:10px;margin-top:8px">NEXT GENERATION AI SYSTEM</div>
+</header>
+
+<div class="reactor"><div class="core"></div></div>
+
+<div style="letter-spacing:3px">ARC REACTOR</div>
+<div class="status">SYSTEM READY</div>
+
+<div class="panel">
+<h3>VOICE COMMAND CENTER</h3>
+<div id="output">Welcome back, Sir.</div>
+<button onclick="listen()">🎙 ACTIVATE VOICE</button>
+<button onclick="speak('JARVIS system is ready, Sir')">🔊 TEST VOICE</button>
+</div>
+
+<div class="panel">
+<h3>SMART APP LAUNCHER</h3>
+<div class="apps" id="apps"></div>
+</div>
+
+<div class="panel">
+<h3>AI COMMAND TERMINAL</h3>
+<input id="command" placeholder="Type your command...">
+<button onclick="runCommand()">SEND</button>
+</div>
+
+<script>
+const appList=[
+ ["📞","Phone","tel:"],
+ ["🌐","Chrome","https://www.google.com"],
+ ["▶️","YouTube","https://www.youtube.com"],
+ ["💬","WhatsApp","https://wa.me/"],
+ ["📷","Camera",""],
+ ["⚙️","Settings",""],
+ ["📁","Files",""],
+ ["🎵","Music",""]
+];
+
+const apps=document.getElementById("apps");
+
+appList.forEach(a=>{
+ const el=document.createElement("div");
+ el.className="app";
+ el.innerHTML="<span>"+a[0]+"</span>"+a[1];
+ el.onclick=()=>openApp(a[1],a[2]);
+ apps.appendChild(el);
+});
+
+function speak(text){
+ document.getElementById("output").textContent=text;
+ if("speechSynthesis" in window){
+  const msg=new SpeechSynthesisUtterance(text);
+  msg.lang="hi-IN";
+  speechSynthesis.speak(msg);
+ }
+}
+
+function openApp(name,url){
+ if(url){
+  window.open(url,"_blank");
+  speak("Opening "+name);
+ }else{
+  speak(name+" needs Android app integration.");
+ }
+}
+
+function runCommand(){
+ const value=document.getElementById("command").value.trim().toLowerCase();
+ if(!value)return;
+ if(value.includes("youtube"))openApp("YouTube","https://www.youtube.com");
+ else if(value.includes("chrome")||value.includes("google"))openApp("Chrome","https://www.google.com");
+ else if(value.includes("whatsapp"))openApp("WhatsApp","https://wa.me/");
+ else if(value.includes("phone"))openApp("Phone","tel:");
+ else speak("Command received. "+value);
+}
+
+function listen(){
+ const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!Speech){speak("Voice recognition is not supported in this browser.");return;}
+ const rec=new Speech();
+ rec.lang="hi-IN";
+ rec.onresult=e=>{
+  document.getElementById("command").value=e.results[0][0].transcript;
+  runCommand();
+ };
+ rec.onerror=()=>speak("Voice error. Please try again.");
+ rec.start();
+}
+</script>
+</body>
+</html>
